@@ -1,5 +1,5 @@
 {
-  "originHash" : "a1b1e06fbdf5f90d2817b4e4ba491ff6fc177e87dad20844f45d67caa0b58193",
+  "originHash" : "e5d3ba1ed5f23039adc754554dbb18a04ea2410735a96fe790a231a264470447",
   "pins" : [
     {
       "identity" : "liveview-native-core",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
-        "revision" : "0687f71944021d616d34d922343dcef086855920",
-        "version" : "600.0.1"
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
       }
     }
   ],

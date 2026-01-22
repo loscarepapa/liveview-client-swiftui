@@ -116,30 +116,31 @@ public extension FunctionParameterSyntax {
            attributeReferenceType.name.text == "AttributeReference" {
             // value.resolve(on: __element, in: __context)
             var resolvedAttribute = FunctionCallExprSyntax.resolveAttributeReference(parameterReference)
+            let firstArgType = attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(TypeSyntax.self)
             // a resolvable value should call `resolve(...)` again
-            if attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(IdentifierTypeSyntax.self)?.name.text.starts(with: "StylesheetResolvable")
-                ?? attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(OptionalTypeSyntax.self)?.wrappedType.as(IdentifierTypeSyntax.self)?.name.text.starts(with: "StylesheetResolvable")
+            if firstArgType?.as(IdentifierTypeSyntax.self)?.name.text.starts(with: "StylesheetResolvable")
+                ?? firstArgType?.as(OptionalTypeSyntax.self)?.wrappedType.as(IdentifierTypeSyntax.self)?.name.text.starts(with: "StylesheetResolvable")
                 ?? false
             {
                 resolvedAttribute = FunctionCallExprSyntax.resolveAttributeReference(resolvedAttribute)
             }
             // InlineViewReference should call `resolve(...)` again
             if (
-                attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(IdentifierTypeSyntax.self)
-                    ?? attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(OptionalTypeSyntax.self)?.wrappedType.as(IdentifierTypeSyntax.self)
+                firstArgType?.as(IdentifierTypeSyntax.self)
+                    ?? firstArgType?.as(OptionalTypeSyntax.self)?.wrappedType.as(IdentifierTypeSyntax.self)
                )?.name.text == "InlineViewReference"
             {
                 resolvedAttribute = FunctionCallExprSyntax.resolveAttributeReference(resolvedAttribute)
             }
             // TextReference should call `resolve(...)` again
             if (
-                attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(IdentifierTypeSyntax.self)
-                    ?? attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(OptionalTypeSyntax.self)?.wrappedType.as(IdentifierTypeSyntax.self)
+                firstArgType?.as(IdentifierTypeSyntax.self)
+                    ?? firstArgType?.as(OptionalTypeSyntax.self)?.wrappedType.as(IdentifierTypeSyntax.self)
                )?.name.text == "TextReference"
             {
                 resolvedAttribute = FunctionCallExprSyntax.resolveAttributeReference(resolvedAttribute)
             }
-            if let typeName = attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(IdentifierTypeSyntax.self)?.name.text,
+            if let typeName = firstArgType?.as(IdentifierTypeSyntax.self)?.name.text,
                typeName == "ViewReference" || typeName == "ToolbarContentReference" || typeName == "CustomizableToolbarContentReference" {
                 // `ViewReference` should be converted into a closure that resolves the `ViewReference`.
                 return ExprSyntax(
@@ -173,7 +174,8 @@ public extension FunctionParameterSyntax {
                 }
             )
         } else if let changeTrackedType = self.type.as(MemberTypeSyntax.self)?.baseType.as(IdentifierTypeSyntax.self) ?? self.type.as(OptionalTypeSyntax.self)?.wrappedType.as(MemberTypeSyntax.self)?.baseType.as(IdentifierTypeSyntax.self),
-                  changeTrackedType.name.text == "ChangeTracked"
+                  changeTrackedType.name.text == "ChangeTracked",
+                  let changeTrackedArgType = changeTrackedType.genericArgumentClause!.arguments.first!.argument.as(TypeSyntax.self)
         { // ChangeTracked should use `.castProjectedValue(type: T.self)`
             return ExprSyntax(FunctionCallExprSyntax(
                 callee: MemberAccessExprSyntax(
@@ -184,7 +186,7 @@ public extension FunctionParameterSyntax {
                 LabeledExprSyntax(
                     label: "type",
                     expression: MemberAccessExprSyntax(
-                        base: TypeExprSyntax(type: changeTrackedType.genericArgumentClause!.arguments.first!.argument),
+                        base: TypeExprSyntax(type: changeTrackedArgType),
                         name: .identifier("self")
                     )
                 )

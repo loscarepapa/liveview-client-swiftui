@@ -303,7 +303,7 @@ public extension NormalizableDeclSyntax {
                         return parameter
                             .with(\.type, TypeSyntax(MemberTypeSyntax(
                                 baseType: IdentifierTypeSyntax(name: .identifier("ChangeTracked"), genericArgumentClause: GenericArgumentClauseSyntax {
-                                    let type = memberType.genericArgumentClause!.arguments.first!.argument
+                                    let type = memberType.genericArgumentClause!.arguments.first!.argument.as(TypeSyntax.self)!
                                     if let identifierType = type.as(IdentifierTypeSyntax.self),
                                        let genericType = genericWhereClause?.requirements.lazy.compactMap({ requirement -> TypeSyntax? in
                                            switch requirement.requirement {
@@ -339,7 +339,7 @@ public extension NormalizableDeclSyntax {
                         return parameter
                             .with(\.type, TypeSyntax(MemberTypeSyntax(
                                 baseType: IdentifierTypeSyntax(name: .identifier("ChangeTracked"), genericArgumentClause: GenericArgumentClauseSyntax {
-                                    let type = identifierType.genericArgumentClause!.arguments.first!.argument
+                                    let type = identifierType.genericArgumentClause!.arguments.first!.argument.as(TypeSyntax.self)!
                                     if let identifierType = type.as(IdentifierTypeSyntax.self),
                                        let genericType = genericWhereClause?.requirements.lazy.compactMap({ requirement -> TypeSyntax? in
                                            switch requirement.requirement {
@@ -396,7 +396,7 @@ public extension NormalizableDeclSyntax {
                         } else if let memberType = parameter.type.as(MemberTypeSyntax.self),
                                   memberType.baseType.as(IdentifierTypeSyntax.self)?.name.text == "Swift",
                                   memberType.name.text == "Set",
-                                  let elementType = memberType.genericArgumentClause?.arguments.first?.argument
+                                  let elementType = memberType.genericArgumentClause?.arguments.first?.argument.as(TypeSyntax.self)
                         { // Swift.Set<T> -> AttributeReference<StylesheetResolvableSet<T.Resolvable>>
                             return parameter
                                 .with(\.type, TypeSyntax(IdentifierTypeSyntax(name: .identifier("StylesheetResolvableSet"), genericArgumentClause: GenericArgumentClauseSyntax {
@@ -528,8 +528,9 @@ public extension TypeSyntax {
                 return TypeSyntax(IdentifierTypeSyntax(name: .identifier("String")))
             } else if memberType.name.text == "View" {
                 return TypeSyntax(IdentifierTypeSyntax(name: .identifier("InlineViewReference")))
-            } else if memberType.name.text == "Binding" {
-                return TypeSyntax(IdentifierTypeSyntax(name: .identifier("ChangeTracked"), genericArgumentClause: memberType.genericArgumentClause))
+            } else if memberType.name.text == "Binding",
+                  let bindingGenericClause = memberType.genericArgumentClause {
+                return TypeSyntax(IdentifierTypeSyntax(name: .identifier("ChangeTracked"), genericArgumentClause: bindingGenericClause))
             } else {
                 return TypeSyntax(IdentifierTypeSyntax(name: .identifier("StylesheetResolvable\(memberType.name.text)")))
             }
@@ -583,7 +584,7 @@ public extension TypeSyntax {
         } else if let memberType = self.as(MemberTypeSyntax.self),
                   memberType.baseType.as(IdentifierTypeSyntax.self)?.name.text == "Swift",
                   memberType.name.text == "Set",
-                  let elementType = memberType.genericArgumentClause?.arguments.first?.argument
+                  let elementType = memberType.genericArgumentClause?.arguments.first?.argument.as(TypeSyntax.self)
         { // Swift.Set<T> -> StylesheetResolvableSet<T.Resolvable>
             return TypeSyntax(IdentifierTypeSyntax(name: .identifier("StylesheetResolvableSet"), genericArgumentClause: GenericArgumentClauseSyntax {
                 GenericArgumentSyntax(argument: MemberTypeSyntax(baseType: elementType, name: .identifier("Resolvable")))
