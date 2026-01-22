@@ -195,7 +195,7 @@ public final class StyleDefinitionGenerator: SyntaxVisitor {
             // special case for `toolbar` to exclude `ViewReference` clauses.
             if modifier.name.text == "toolbar" {
                 guard !modifier.signature.parameterClause.parameters.contains(where: {
-                    return $0.type.as(IdentifierTypeSyntax.self)?.genericArgumentClause?.arguments.first?.argument.as(TypeSyntax.self)?.as(IdentifierTypeSyntax.self)?.name.text == "ViewReference"
+                    return $0.type.as(IdentifierTypeSyntax.self)?.genericArgumentClause?.arguments.first.flatMap({ TypeSyntax($0.argument).as(IdentifierTypeSyntax.self) })?.name.text == "ViewReference"
                 })
                 else { continue }
             }
@@ -214,7 +214,7 @@ public final class StyleDefinitionGenerator: SyntaxVisitor {
             availability.insert(contentsOf: extensionAvailability, at: availability.startIndex)
             
             let usesGestureState = modifier.signature.parameterClause.parameters.contains(where: {
-                $0.type.as(IdentifierTypeSyntax.self)?.genericArgumentClause?.arguments.first?.argument.as(TypeSyntax.self)?.as(IdentifierTypeSyntax.self)?.name.text == "StylesheetResolvableGesture"
+                $0.type.as(IdentifierTypeSyntax.self)?.genericArgumentClause?.arguments.first.flatMap({ TypeSyntax($0.argument).as(IdentifierTypeSyntax.self) })?.name.text == "StylesheetResolvableGesture"
             })
             
             /// The enum case added to the declaration for this signature

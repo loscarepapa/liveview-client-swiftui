@@ -45,12 +45,12 @@ public extension TypeSyntaxProtocol {
         
         // generic arguments must be valid (A<B, C>)
         if let identifierType = self.as(IdentifierTypeSyntax.self),
-           !(identifierType.genericArgumentClause?.arguments.allSatisfy({ $0.argument.as(TypeSyntax.self)?.isValidModifierType ?? true }) ?? true)
+           !(identifierType.genericArgumentClause?.arguments.allSatisfy({ TypeSyntax($0.argument).isValidModifierType }) ?? true)
         {
             return false
         }
         if let memberType = self.as(MemberTypeSyntax.self),
-           !(memberType.genericArgumentClause?.arguments.allSatisfy({ $0.argument.as(TypeSyntax.self)?.isValidModifierType ?? true }) ?? true)
+           !(memberType.genericArgumentClause?.arguments.allSatisfy({ TypeSyntax($0.argument).isValidModifierType }) ?? true)
         {
             return false
         }
@@ -103,7 +103,7 @@ public extension TypeSyntaxProtocol {
         if let memberType = self.as(MemberTypeSyntax.self),
            memberType.baseType.as(MemberTypeSyntax.self)?.name.text == "Swift",
            memberType.name.text == "Optional",
-           memberType.genericArgumentClause?.arguments.first?.argument.as(TypeSyntax.self)?.as(FunctionTypeSyntax.self) != nil
+           memberType.genericArgumentClause?.arguments.first.map({ TypeSyntax($0.argument).as(FunctionTypeSyntax.self) }) != nil
         {
             return false
         }
@@ -221,7 +221,7 @@ public extension TypeSyntaxProtocol {
             case "Bool", "Duration", "Float", "Float16", "Int", "Int128", "Int16", "Int32", "Int64", "Int8", "LocalTestingActorID", "Never", "ObservationRegistrar", "SIMD16", "SIMD2", "SIMD3", "SIMD32", "SIMD4", "SIMD64", "SIMD8", "SIMDMask", "String", "TaskPriority", "UInt", "UInt128", "UInt16", "UInt32", "UInt64", "UInt8":
                 return true
             case "ClosedRange", "CollectionDifference", "ContiguousArray", "Optional", "PartialRangeFrom", "PartialRangeThrough", "PartialRangeUpTo", "Range", "Set", "Dictionary":
-                return memberType.genericArgumentClause?.arguments.allSatisfy({ $0.argument.as(TypeSyntax.self)?.isPrimitiveDecodable ?? true }) ?? true
+                return memberType.genericArgumentClause?.arguments.allSatisfy({ TypeSyntax($0.argument).isPrimitiveDecodable }) ?? true
             default:
                 return false
             }
@@ -241,7 +241,7 @@ public extension TypeSyntaxProtocol {
             case "Bool", "Duration", "Float", "Float16", "Int", "Int128", "Int16", "Int32", "Int64", "Int8", "LocalTestingActorID", "Never", "ObservationRegistrar", "SIMD16", "SIMD2", "SIMD3", "SIMD32", "SIMD4", "SIMD64", "SIMD8", "SIMDMask", "String", "TaskPriority", "UInt", "UInt128", "UInt16", "UInt32", "UInt64", "UInt8":
                 return true
             case "ClosedRange", "CollectionDifference", "ContiguousArray", "Optional", "PartialRangeFrom", "PartialRangeThrough", "PartialRangeUpTo", "Range", "Set", "Dictionary":
-                return identifierType.genericArgumentClause?.arguments.allSatisfy({ $0.argument.as(TypeSyntax.self)?.isPrimitiveDecodable ?? true }) ?? true
+                return identifierType.genericArgumentClause?.arguments.allSatisfy({ TypeSyntax($0.argument).isPrimitiveDecodable }) ?? true
             case "TimeInterval", "Date", "URL", "Data":
                 return true
             default:

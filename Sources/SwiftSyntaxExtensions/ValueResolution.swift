@@ -116,7 +116,7 @@ public extension FunctionParameterSyntax {
            attributeReferenceType.name.text == "AttributeReference" {
             // value.resolve(on: __element, in: __context)
             var resolvedAttribute = FunctionCallExprSyntax.resolveAttributeReference(parameterReference)
-            let firstArgType = attributeReferenceType.genericArgumentClause!.arguments.first!.argument.as(TypeSyntax.self)
+            let firstArgType: TypeSyntax? = attributeReferenceType.genericArgumentClause!.arguments.first.map({ TypeSyntax($0.argument) })
             // a resolvable value should call `resolve(...)` again
             if firstArgType?.as(IdentifierTypeSyntax.self)?.name.text.starts(with: "StylesheetResolvable")
                 ?? firstArgType?.as(OptionalTypeSyntax.self)?.wrappedType.as(IdentifierTypeSyntax.self)?.name.text.starts(with: "StylesheetResolvable")
@@ -175,7 +175,7 @@ public extension FunctionParameterSyntax {
             )
         } else if let changeTrackedType = self.type.as(MemberTypeSyntax.self)?.baseType.as(IdentifierTypeSyntax.self) ?? self.type.as(OptionalTypeSyntax.self)?.wrappedType.as(MemberTypeSyntax.self)?.baseType.as(IdentifierTypeSyntax.self),
                   changeTrackedType.name.text == "ChangeTracked",
-                  let changeTrackedArgType = changeTrackedType.genericArgumentClause!.arguments.first!.argument.as(TypeSyntax.self)
+                  let changeTrackedArgType = changeTrackedType.genericArgumentClause!.arguments.first.map({ TypeSyntax($0.argument) })
         { // ChangeTracked should use `.castProjectedValue(type: T.self)`
             return ExprSyntax(FunctionCallExprSyntax(
                 callee: MemberAccessExprSyntax(
