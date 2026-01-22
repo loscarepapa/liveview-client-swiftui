@@ -303,7 +303,7 @@ public extension NormalizableDeclSyntax {
                         return parameter
                             .with(\.type, TypeSyntax(MemberTypeSyntax(
                                 baseType: IdentifierTypeSyntax(name: .identifier("ChangeTracked"), genericArgumentClause: GenericArgumentClauseSyntax {
-                                    let type = TypeSyntax(memberType.genericArgumentClause!.arguments.first!.argument)
+                                    let type = memberType.genericArgumentClause!.arguments.first!.argument.as(TypeSyntax.self)!
                                     if let identifierType = type.as(IdentifierTypeSyntax.self),
                                        let genericType = genericWhereClause?.requirements.lazy.compactMap({ requirement -> TypeSyntax? in
                                            switch requirement.requirement {
@@ -584,7 +584,7 @@ public extension TypeSyntax {
         } else if let memberType = self.as(MemberTypeSyntax.self),
                   memberType.baseType.as(IdentifierTypeSyntax.self)?.name.text == "Swift",
                   memberType.name.text == "Set",
-                  let elementType = memberType.genericArgumentClause?.arguments.first.map({ TypeSyntax($0.argument) })
+                  let elementType = memberType.genericArgumentClause?.arguments.first.flatMap({ $0.argument.as(TypeSyntax.self) })
         { // Swift.Set<T> -> StylesheetResolvableSet<T.Resolvable>
             return TypeSyntax(IdentifierTypeSyntax(name: .identifier("StylesheetResolvableSet"), genericArgumentClause: GenericArgumentClauseSyntax {
                 GenericArgumentSyntax(argument: MemberTypeSyntax(baseType: elementType, name: .identifier("Resolvable")))
