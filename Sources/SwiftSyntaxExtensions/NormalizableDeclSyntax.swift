@@ -71,11 +71,11 @@ public extension NormalizableDeclSyntax {
                             case let .sameTypeRequirement(sameType):
                                 guard sameType.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return sameType.rightType
+                                return TypeSyntax(sameType.rightType)
                             case let .conformanceRequirement(conformance):
                                 guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return conformance.rightType.erasedType()
+                                return TypeSyntax(conformance.rightType).erasedType()
                             default:
                                 return nil
                             }
@@ -101,11 +101,11 @@ public extension NormalizableDeclSyntax {
                             case let .sameTypeRequirement(sameType):
                                 guard sameType.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return sameType.rightType
+                                return TypeSyntax(sameType.rightType)
                             case let .conformanceRequirement(conformance):
                                 guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return conformance.rightType.erasedType()
+                                return TypeSyntax(conformance.rightType).erasedType()
                             default:
                                 return nil
                             }
@@ -130,11 +130,11 @@ public extension NormalizableDeclSyntax {
                             case let .sameTypeRequirement(sameType):
                                 guard sameType.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return sameType.rightType
+                                return TypeSyntax(sameType.rightType)
                             case let .conformanceRequirement(conformance):
                                 guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return conformance.rightType.erasedType()
+                                return TypeSyntax(conformance.rightType).erasedType()
                             default:
                                 return nil
                             }
@@ -160,11 +160,11 @@ public extension NormalizableDeclSyntax {
                             case let .sameTypeRequirement(sameType):
                                 guard sameType.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return sameType.rightType
+                                return TypeSyntax(sameType.rightType)
                             case let .conformanceRequirement(conformance):
                                 guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return conformance.rightType.erasedType()
+                                return TypeSyntax(conformance.rightType).erasedType()
                             default:
                                 return nil
                             }
@@ -200,7 +200,7 @@ public extension NormalizableDeclSyntax {
                                case let .conformanceRequirement(conformance):
                                    guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == returnType.name.text
                                    else { return nil }
-                                   return conformance.rightType
+                                   return TypeSyntax(conformance.rightType)
                                default:
                                    return nil
                                }
@@ -274,11 +274,11 @@ public extension NormalizableDeclSyntax {
                             case let .sameTypeRequirement(sameType):
                                 guard sameType.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return sameType.rightType
+                                return TypeSyntax(sameType.rightType)
                             case let .conformanceRequirement(conformance):
                                 guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                 else { return nil }
-                                return conformance.rightType.erasedType()
+                                return TypeSyntax(conformance.rightType).erasedType()
                             default:
                                 return nil
                             }
@@ -310,11 +310,11 @@ public extension NormalizableDeclSyntax {
                                            case let .sameTypeRequirement(sameType):
                                                guard sameType.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                                else { return nil }
-                                               return sameType.rightType
+                                               return TypeSyntax(sameType.rightType)
                                            case let .conformanceRequirement(conformance):
                                                guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                                else { return nil }
-                                               return conformance.rightType.erasedType()
+                                               return TypeSyntax(conformance.rightType).erasedType()
                                            default:
                                                return nil
                                            }
@@ -346,11 +346,11 @@ public extension NormalizableDeclSyntax {
                                            case let .sameTypeRequirement(sameType):
                                                guard sameType.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                                else { return nil }
-                                               return sameType.rightType
+                                               return TypeSyntax(sameType.rightType)
                                            case let .conformanceRequirement(conformance):
                                                guard conformance.leftType.as(IdentifierTypeSyntax.self)?.name.text == identifierType.name.text
                                                else { return nil }
-                                               return conformance.rightType.erasedType()
+                                               return TypeSyntax(conformance.rightType).erasedType()
                                            default:
                                                return nil
                                            }
